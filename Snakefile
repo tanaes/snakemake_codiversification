@@ -35,9 +35,21 @@ rule make_bdiv_params:
 
 ### Prep rules used for both beta div and cospeciation
 
+rule inflate_deblur:
+    input:
+        config['input_files']['deblurred_biom']
+    output:
+        'data/starting_files/inflated_deblurred.fna'
+    run:
+        shell("""
+              set +u; {QIIME_ENV}; set -u
+
+              inflate_deblur.py {input} > {output}
+              """)
+
 rule remove_chimeras:
     input:
-        config['input_files']['original_fasta']
+        'data/starting_files/inflated_deblurred.fna'
     output:
         'data/starting_files/reduce_fasta_fasta.nochimera.fna'
     params:
