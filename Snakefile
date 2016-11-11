@@ -76,7 +76,7 @@ rule remove_chimeras:
     params:
         chimera_dir = 'data/starting_files/chimera_checked',
         ref_file = config['input_files']['chimera_ref'],
-        non_chimears_retention = 'intersection'
+        non_chimeras_retention = 'intersection'
     log:
         chimera = 'logs/setup/remove_chimeras-identify_chimeric_seqs.log',
         filter = 'logs/setup/remove_chimeras-filter_fasta.log'
