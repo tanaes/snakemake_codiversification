@@ -1,6 +1,6 @@
 
 
-scripts_dir = config['envs']['scripts_dir']
+codiv_scripts_dir = config['envs']['codiv_scripts_dir']
 
 rule all:
     input:
@@ -314,7 +314,7 @@ rule subcluster_pOTUs:
         shell("""
               set +u; {QIIME_ENV}; set -u
 
-              python ${scripts_dir}/otu_subcluster.py \
+              python ${codiv_scripts_dir}/otu_subcluster.py \
               -i {input.otu_map} \
               -o data/codiv/{wildcards.width}/subclustered_otus \
               -f {input.fasta} \
@@ -357,7 +357,7 @@ rule test_cospeciation:
         shell("""
               set +u; {QIIME_ENV}; set -u
 
-              python ${scripts_dir}/test_cospeciation.py \
+              python ${codiv_scripts_dir}/test_cospeciation.py \
               -i {params.in_dir} \
               -p {input.biom} \
               --host_tree_fp {input.host_tree} \
