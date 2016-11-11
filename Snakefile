@@ -147,7 +147,7 @@ rule compare_beta_diversity:
         tree = 'data/bdiv_summary/{metric}_{width}/master_tree.tre',
     params:
         jack_dir = 'data/pOTUs/{width}/jk_beta_div_{metric}/rare_upgma',
-        output_dir = 'data/bdiv_summary/{metric_width}'
+        output_dir = 'data/bdiv_summary/{metric}_{width}'
     log:
         'logs/betadiv/compare_beta_diversity-{width}-{metric}.log'
     benchmark:
