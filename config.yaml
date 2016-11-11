@@ -1,0 +1,62 @@
+# config.yaml
+envs:
+  BDIV_ENV:
+    source activate ete2
+  QIIME_ENV:
+    source activate qiime
+  CODIV_ENV:
+    source activate qiime
+  scripts_dir:
+    /home/jgsanders/git_sw/codiversification
+bdiv_params:
+  bdiv_metrics:
+    - binary_jaccard
+    - unweighted_unifrac
+    - weighted_unifrac
+  bdiv_OTU_widths:
+    - 85
+    - 88
+    - 91
+    - 94
+    - 97
+    - 99
+  color_by:
+    - Species_tree
+    - Diet
+    - Phyl_Group
+  jk_permutations:
+    100
+  jk_depth:
+    7200
+codiv_params:
+  otu_picking_method:
+    usearch61
+  pOTU_widths:
+    - 94
+    - 97
+    - 99
+  collapse_field:
+    Species_tree
+  pOTU_rarify:
+    10000
+  min_obvs:
+    3
+  pOTU_chunks:
+    16
+  codiv_test:
+    hommola_host
+  permutations:
+    10000
+input_files:
+  host_tree_fp:
+    /home/ssong/sanders_anal/deblurred_redo/input_files/furcated_host_tree.tre
+  original_fasta:
+    Reduced_mapping_4persp_nohyb.clean.inflated.fna
+  sample_map:
+    /home/ssong/sanders_anal/deblurred_redo/input_files/Reduced_mapping_4persp_nohyb_RC2036.txt
+  chimera_ref:
+    /home/jgsanders/ref_data/gg_13_8_otus/rep_set/97_otus.fasta
+  cOTU_params_fp:
+    /home/jgsanders/git_sw/codiversification/params/100_fasttree_muscle_sumaclust_params.txt
+
+
