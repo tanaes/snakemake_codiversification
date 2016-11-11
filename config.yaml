@@ -6,7 +6,7 @@ envs:
     source activate qiime
   CODIV_ENV:
     source activate qiime
-  scripts_dir:
+    codiv_scripts_dir:
     /home/jgsanders/git_sw/codiversification
 bdiv_params:
   bdiv_metrics:
@@ -50,8 +50,8 @@ codiv_params:
 input_files:
   host_tree_fp:
     /home/ssong/sanders_anal/deblurred_redo/input_files/furcated_host_tree.tre
-  original_fasta:
-    Reduced_mapping_4persp_nohyb.clean.inflated.fna
+  deblurred_biom:
+    /home/ssong/sanders_anal/deblurred_redo/input_files/final.withtax.min10.biom
   sample_map:
     /home/ssong/sanders_anal/deblurred_redo/input_files/Reduced_mapping_4persp_nohyb_RC2036.txt
   chimera_ref:
