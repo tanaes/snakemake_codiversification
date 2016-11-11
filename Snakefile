@@ -122,7 +122,7 @@ rule pOTU_clustering:
               pick_de_novo_otus.py -i {input.fasta} \
               -o {params.output_dir} \
               -p {input.params} \
-              -aO {threads} 1> {log} 2>&1
+              -aO {threads} -f 1> {log} 2>&1
               """)
 
 
@@ -155,7 +155,7 @@ rule jk_beta_diversity:
               -m {input.md_map} \
               -t {input.tree} \
               -p {input.beta_params} \
-              -aO {threads} 1> {log} 2>&1
+              -aO {threads} -f 1> {log} 2>&1
               """)
 
 
