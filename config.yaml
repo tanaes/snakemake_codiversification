@@ -6,7 +6,7 @@ envs:
     source activate qiime
   CODIV_ENV:
     source activate qiime
-    codiv_scripts_dir:
+  codiv_scripts_dir:
     /home/jgsanders/git_sw/codiversification
 bdiv_params:
   bdiv_metrics:
