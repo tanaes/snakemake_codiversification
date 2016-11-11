@@ -108,7 +108,6 @@ rule pOTU_clustering:
     output:
         biom = 'data/pOTUs/{width}/otu_table.biom',
         otu_map = 'data/pOTUs/{width}/otu_map.txt',
-        rep_set = 'data/pOTUs/{width}/rep_set.fna',
         tree = 'data/pOTUs/{width}/rep_set.tre'
     params:
         output_dir = 'data/pOTUs/{width}'
@@ -128,8 +127,7 @@ rule pOTU_clustering:
               -p {input.params} \
               -aO {threads} -f 1> {log} 2>&1
 
-              ln -s `find $PWD/{params.output_dir}/rep_set -name *.fna` {params.output_dir}/rep_set.fna
-              ln -s `find $PWD/{params.output_dir}/*picked_otus -name *_otus.txt` {params.output_dir}/otu_map.txt
+              ln -s `readlink -f {params.output_dir}/*picked_otus/*_otus.txt` {output.otu_map}
               """)
 
 
