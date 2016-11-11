@@ -49,11 +49,11 @@ rule make_bdiv_params:
         'data/params/bdiv_params.txt'
     run:
         with open(output[0], 'w') as out:
-            out.write('beta_diversity:metrics %s' %
+            out.write('beta_diversity:metrics %s\n' %
                       ','.join(config['bdiv_params']['bdiv_metrics']))
-            out.write('make_emperor:color_by %s' %
+            out.write('make_emperor:color_by %s\n' %
                       ','.join(config['bdiv_params']['color_by']))
-            out.write('multiple_rarefactions_even_depth:num_reps %s' %
+            out.write('multiple_rarefactions_even_depth:num_reps %s\n' %
                       config['bdiv_params']['jk_permutations'])
 
 
