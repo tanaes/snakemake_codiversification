@@ -17,7 +17,7 @@ rule beta_div:
 
 rule codiversification:
     input:
-        expand('data/codiv/{width}/{test}_{field}/uncorrected_sig_nodes.txt' %
+        expand('data/codiv/{width}/{test}_{field}/uncorrected_sig_nodes.txt',
                 width=config['codiv_params']['pOTU_widths'],
                 test=config['codiv_params']['codiv_test'],
                 field=config['codiv_params']['collapse_field'])
