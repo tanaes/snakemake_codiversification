@@ -1,3 +1,6 @@
+import os
+from glob import glob
+
 if 'bdiv_env' in config['envs']:
     bdiv_env = config['envs']['bdiv_env']
 if 'qiime_env' in config['envs']:
@@ -72,7 +75,7 @@ rule remove_chimeras:
     input:
         'data/starting_files/inflated_deblurred.fna'
     output:
-        'data/starting_files/reduce_fasta_fasta.nochimera.fna'
+        'data/starting_files/inflated_deblurred.nochimera.fna'
     params:
         chimera_dir = 'data/starting_files/chimera_checked',
         ref_file = config['input_files']['chimera_ref'],
@@ -100,7 +103,7 @@ rule remove_chimeras:
 
 rule pOTU_clustering:
     input:
-        fasta = 'data/starting_files/reduce_fasta_fasta.nochimera.fna',
+        fasta = 'data/starting_files/inflated_deblurred.nochimera.fna',
         params = 'data/params/{width}_pOTU_params.txt'
     output:
         biom = 'data/pOTUs/{width}/otu_table.biom',
@@ -116,6 +119,7 @@ rule pOTU_clustering:
     benchmark:
         'benchmarks/setup/pOTU_clustering-{width}.json'
     run:
+
         shell("""
               set +u; {qiime_env}; set -u
 
@@ -123,6 +127,9 @@ rule pOTU_clustering:
               -o {params.output_dir} \
               -p {input.params} \
               -aO {threads} -f 1> {log} 2>&1
+
+              ln -s {params.output_dir}/rep_set/*.fna {params.output_dir}/rep_set.fna
+              ln -s {params.output_dir}/*picked_otus/*_otus.txt {params.output_dir}/otu_map.txt
               """)
 
 
@@ -326,7 +333,7 @@ rule subcluster_pOTUs:
     input:
         biom = 'data/codiv/{width}/temp_biom/chunk{chunk}.biom',
         otu_map = 'data/pOTUs/{width}/otu_map.txt',
-        fasta = 'data/starting_files/reduce_fasta_fasta.nochimera.fna',
+        fasta = 'data/starting_files/inflated_deblurred.nochimera.fna',
         params = config['input_files']['cOTU_params_fp']
     output:
         'data/codiv/{width}/subclustered_otus/chunk{chunk}.done'
