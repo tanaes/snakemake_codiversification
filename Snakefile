@@ -142,7 +142,8 @@ rule jk_beta_diversity:
         md_map = config['input_files']['sample_map'],
         beta_params = 'data/params/bdiv_params.txt'
     output:
-        'data/pOTUs/{width}/jk_beta_div/{metric}/rare_upgma_consensus.tre'
+        ['data/pOTUs/{width}/jk_beta_div/%s/rare_upgma_consensus.tre' %
+         x for x in config['bdiv_params']['bdiv_metrics']]
     params:
         depth = config['bdiv_params']['jk_depth'],
         output_dir = 'data/pOTUs/{width}/jk_beta_div'
