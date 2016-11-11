@@ -8,6 +8,8 @@ if 'qiime_env' in config['envs']:
 if 'codiv_env' in config['envs']:
     codiv_env = config['envs']['codiv_env']
 
+pOTU_chunks = config['codiv_params']['pOTU_chunks']
+
 codiv_scripts_dir = config['envs']['codiv_scripts_dir']
 
 rule all:
@@ -305,14 +307,8 @@ rule split_pOTU_tables:
                  config['codiv_params']['pOTU_rarify'],
                  config['codiv_params']['min_obvs'])
     output:
-        'data/codiv/{width}/temp_biom/chunk1.biom',
-        'data/codiv/{width}/temp_biom/chunk2.biom',
-        'data/codiv/{width}/temp_biom/chunk3.biom',
-        'data/codiv/{width}/temp_biom/chunk4.biom',
-        'data/codiv/{width}/temp_biom/chunk5.biom',
-        'data/codiv/{width}/temp_biom/chunk6.biom',
-        'data/codiv/{width}/temp_biom/chunk7.biom',
-        'data/codiv/{width}/temp_biom/chunk8.biom'
+        ['data/codiv/{width}/temp_biom/chunk%s.biom' %
+         x for x in list(range(1, pOTU_chunks + 1))]
     log:
         'logs/codiv/split_pOTU_tables-{width}.log'
     benchmark:
@@ -323,7 +319,7 @@ rule split_pOTU_tables:
 
               split_biom.py -i {input.biom} \
               -o data/codiv/temp_biom \
-              -n 8 1> {log} 2>&1
+              -n  1> {log} 2>&1
               """)
 
 
@@ -358,7 +354,7 @@ rule subcluster_pOTUs:
 rule test_cospeciation:
     input:
         lambda wildcards: expand('data/codiv/{width}/subclustered_otus/chunk{chunk}.done',
-                                 chunk=list(range(1, 9)),
+                                 chunk=list(range(1, pOTU_chunks + 1)),
                                  width=wildcards.width),
         biom = 'data/codiv/{width}/otu_table.%s.%s.s%s.biom' %
                 (config['codiv_params']['collapse_field'],

@@ -41,6 +41,8 @@ codiv_params:
     10000
   min_obvs:
     3
+  pOTU_chunks:
+    8
   codiv_test:
     hommola_host
   permutations:
