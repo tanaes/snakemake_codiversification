@@ -17,7 +17,7 @@ rule beta_div:
 
 rule codiversification:
     input:
-        expand('data/codiv/{width}/{test}_{field}/uncorrected_sig_nodes.txt' %
+        expand('data/codiv/{width}/{test}_{field}/uncorrected_sig_nodes.txt',
                 width=config['codiv_params']['pOTU_widths'],
                 test=config['codiv_params']['codiv_test'],
                 field=config['codiv_params']['collapse_field'])
@@ -295,11 +295,14 @@ rule split_pOTU_tables:
                  config['codiv_params']['pOTU_rarify'],
                  config['codiv_params']['min_obvs'])
     output:
-        temp(lambda wildcards: expand('data/codiv/{width}/temp_biom/chunk{chunk}.biom',
-                                      chunk=range(1, config['codiv_params']['pOTU_chunks'] + 1),
-                                      width=wildcards.width))
-    params:
-        chunks = config['codiv_params']['pOTU_chunks']
+        'data/codiv/{width}/temp_biom/chunk1.biom',
+        'data/codiv/{width}/temp_biom/chunk2.biom',
+        'data/codiv/{width}/temp_biom/chunk3.biom',
+        'data/codiv/{width}/temp_biom/chunk4.biom',
+        'data/codiv/{width}/temp_biom/chunk5.biom',
+        'data/codiv/{width}/temp_biom/chunk6.biom',
+        'data/codiv/{width}/temp_biom/chunk7.biom',
+        'data/codiv/{width}/temp_biom/chunk8.biom'
     log:
         'logs/codiv/split_pOTU_tables-{width}.log'
     benchmark:
@@ -310,7 +313,7 @@ rule split_pOTU_tables:
 
               split_biom.py -i {input.biom} \
               -o data/codiv/temp_biom \
-              -n {params.chunks} 1> {log} 2>&1
+              -n 8 1> {log} 2>&1
               """)
 
 
@@ -345,7 +348,7 @@ rule subcluster_pOTUs:
 rule test_cospeciation:
     input:
         lambda wildcards: expand('data/codiv/{width}/subclustered_otus/chunk{chunk}.done',
-                                 chunk=range(1, config['codiv_params']['pOTU_chunks'] + 1),
+                                 chunk=list(range(1, 9)),
                                  width=wildcards.width),
         biom = 'data/codiv/{width}/otu_table.%s.%s.s%s.biom' %
                 (config['codiv_params']['collapse_field'],
