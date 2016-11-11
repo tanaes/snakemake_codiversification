@@ -1,0 +1,28 @@
+{
+    "__default__": {
+        "time": "8:00:00",
+        "n": 1,
+        "mem": 8
+    },
+    "pOTU_clustering": {
+        "time": "8:00:00",
+        "n": 8,
+        "mem": 32
+    },
+    "jk_beta_diversity": {
+        "time": "8:00:00",
+        "n": 8,
+        "mem": 32
+    },
+    "subcluster_pOTUs": {
+        "time": "12:00:00",
+        "n": 2,
+        "mem": 64
+    },
+    "test_cospeciation": {
+        "time": "12:00:00",
+        "n": 2,
+        "mem": 32
+    }
+}
+
