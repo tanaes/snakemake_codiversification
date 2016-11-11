@@ -1,4 +1,9 @@
-
+if 'bdiv_env' in config['envs']:
+    bdiv_env = config['envs']['bdiv_env']
+if 'qiime_env' in config['envs']:
+    qiime_env = config['envs']['qiime_env']
+if 'codiv_env' in config['envs']:
+    codiv_env = config['envs']['codiv_env']
 
 codiv_scripts_dir = config['envs']['codiv_scripts_dir']
 
@@ -31,7 +36,7 @@ rule make_pOTU_picking_params:
     params:
         method = config['codiv_params']['otu_picking_method']
     run:
-        with open(output, 'w') as out:
+        with open(output[0], 'w') as out:
             out.write('pick_otus:similarity {wildcards.width}\n'
                       'pick_otus:method {params.method}')
 
@@ -40,7 +45,7 @@ rule make_bdiv_params:
     output:
         'data/params/bdiv_params.txt'
     run:
-        with open(output, 'w') as out:
+        with open(output[0], 'w') as out:
             out.write('beta_diversity:metrics %s' %
                       ','.join(config['bdiv_params']['bdiv_metrics']))
             out.write('make_emperor:color_by %s' %
@@ -58,7 +63,7 @@ rule inflate_deblur:
         'data/starting_files/inflated_deblurred.fna'
     run:
         shell("""
-              set +u; {QIIME_ENV}; set -u
+              set +u; {qiime_env}; set -u
 
               inflate_deblur.py {input} > {output}
               """)
@@ -79,7 +84,7 @@ rule remove_chimeras:
         'benchmarks/setup/remove_chimeras.json'
     run:
         shell("""
-              set +u; {QIIME_ENV}; set -u
+              set +u; {qiime_env}; set -u
 
               identify_chimeric_seqs.py -i {input} \
               -m usearch61 \
@@ -112,7 +117,7 @@ rule pOTU_clustering:
         'benchmarks/setup/pOTU_clustering-{width}.json'
     run:
         shell("""
-              set +u; {QIIME_ENV}; set -u
+              set +u; {qiime_env}; set -u
 
               pick_de_novo_otus.py -i {input.fasta} \
               -o {params.output_dir} \
@@ -142,7 +147,7 @@ rule jk_beta_diversity:
         'benchmarks/betadiv/jk_beta_diversity-{width}.json'
     run:
         shell("""
-              set +u; {QIIME_ENV}; set -u
+              set +u; {qiime_env}; set -u
 
               jackknifed_beta_diversity.py -i {input.biom} \
               -o {params.output_dir} \
@@ -170,7 +175,7 @@ rule compare_beta_diversity:
         'benchmarks/betadiv/compare_beta_diversity-{width}-{metric}.json'
     run:
         shell("""
-              set +u; {QIIME_ENV}; set -u
+              set +u; {qiime_env}; set -u
 
               tree_compare.py -m {input.host_tree} \
               -s {params.jack_dir} \
@@ -195,7 +200,7 @@ rule annotate_bdiv_tree:
         'benchmarks/betadiv/annotate_bdiv_tree.json'
     run:
         shell("""
-              set +u; {BDIV_ENV}; set -u
+              set +u; {bdiv_env}; set -u
 
               annotate_bdiv_tree.py \
               --beta_metrics {params.beta_metrics} \
@@ -225,7 +230,7 @@ rule collapse_pOTU_tables:
         'benchmarks/codiv/collapse_pOTU_tables-{width}.json'
     run:
         shell("""
-              set +u; {QIIME_ENV}; set -u
+              set +u; {qiime_env}; set -u
 
               collapse_samples.py -b {input.biom} \
               -m {input.md_map} \
@@ -251,7 +256,7 @@ rule rarify_pOTU_tables:
         'benchmarks/codiv/rarify_pOTU_tables-{width}.json'
     run:
         shell("""
-              set +u; {QIIME_ENV}; set -u
+              set +u; {qiime_env}; set -u
 
               # rarify for even sampling across species
               single_rarefaction.py -i {input.biom} \
@@ -278,7 +283,7 @@ rule subset_pOTU_tables:
         'benchmarks/codiv/subset_pOTU_tables-{width}.json'
     run:
         shell("""
-              set +u; {QIIME_ENV}; set -u
+              set +u; {qiime_env}; set -u
 
               # subset filtered otu table by abundance
               filter_otus_from_otu_table.py \
@@ -309,7 +314,7 @@ rule split_pOTU_tables:
         'benchmarks/codiv/split_pOTU_tables-{width}.json'
     run:
         shell("""
-              set +u; {QIIME_ENV}; set -u
+              set +u; {qiime_env}; set -u
 
               split_biom.py -i {input.biom} \
               -o data/codiv/temp_biom \
@@ -331,7 +336,7 @@ rule subcluster_pOTUs:
         'benchmarks/codiv/subcluster_pOTUs-{width}-{chunk}.json'
     run:
         shell("""
-              set +u; {QIIME_ENV}; set -u
+              set +u; {qiime_env}; set -u
 
               python ${codiv_scripts_dir}/otu_subcluster.py \
               -i {input.otu_map} \
@@ -374,7 +379,7 @@ rule test_cospeciation:
         'benchmarks/codiv/test_cospeciation-{width}.json'
     run:
         shell("""
-              set +u; {QIIME_ENV}; set -u
+              set +u; {qiime_env}; set -u
 
               python ${codiv_scripts_dir}/test_cospeciation.py \
               -i {params.in_dir} \

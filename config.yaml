@@ -1,10 +1,10 @@
 # config.yaml
 envs:
-  BDIV_ENV:
+  bdiv_env:
     source activate ete2
-  QIIME_ENV:
+  qiime_env:
     source activate qiime
-  CODIV_ENV:
+  codiv_env:
     source activate qiime
   codiv_scripts_dir:
     /home/jgsanders/git_sw/codiversification
