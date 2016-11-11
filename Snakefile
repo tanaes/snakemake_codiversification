@@ -44,6 +44,11 @@ rule remove_chimeras:
         chimera_dir = 'data/starting_files/chimera_checked',
         ref_file = config['input_files']['chimera_ref'],
         non_chimears_retention = 'intersection'
+    log:
+        chimera = 'logs/setup/remove_chimeras-identify_chimeric_seqs.log',
+        filter = 'logs/setup/remove_chimeras-filter_fasta.log'
+    benchmark:
+        'benchmarks/setup/remove_chimeras.json'
     run:
         shell("""
               set +u; {QIIME_ENV}; set -u
@@ -52,11 +57,11 @@ rule remove_chimeras:
               -m usearch61 \
               -o {params.chimera_dir} \
               -r {params.ref_file} \
-              --non_chimeras_retention {params.non_chimeras_retention}
+              --non_chimeras_retention {params.non_chimeras_retention} 1> {log.chimera} 2>&1
 
               filter_fasta.py -f {input} \
               -o {output} \
-              -s {params.chimera_dir}/chimeras.txt -n
+              -s {params.chimera_dir}/chimeras.txt -n 1> {log.filter} 2>&1
               """)
 
 
@@ -73,6 +78,10 @@ rule pOTU_clustering:
         output_dir = 'data/pOTUs/{width}'
     threads:
         8
+    log:
+        'logs/setup/pOTU_clustering-{width}.log'
+    benchmark:
+        'benchmarks/setup/pOTU_clustering-{width}.json'
     run:
         shell("""
               set +u; {QIIME_ENV}; set -u
@@ -80,7 +89,7 @@ rule pOTU_clustering:
               pick_de_novo_otus.py -i {input.fasta} \
               -o {params.output_dir} \
               -p {input.params} \
-              -aO {threads}
+              -aO {threads} 1> {log} 2>&1
               """)
 
 
@@ -99,6 +108,10 @@ rule jk_beta_diversity:
         output_dir = 'data/pOTUs/{width}/jk_beta_div'
     threads:
         8
+    log:
+        'logs/betadiv/jk_beta_diversity-{width}.log'
+    benchmark:
+        'benchmarks/betadiv/jk_beta_diversity-{width}.json'
     run:
         shell("""
               set +u; {QIIME_ENV}; set -u
@@ -109,7 +122,7 @@ rule jk_beta_diversity:
               -m {input.md_map} \
               -t {input.tree} \
               -p {input.beta_params} \
-              -aO {threads}
+              -aO {threads} 1> {log} 2>&1
               """)
 
 
@@ -123,13 +136,17 @@ rule compare_beta_diversity:
     params:
         jack_dir = 'data/pOTUs/{width}/jk_beta_div_{metric}/rare_upgma',
         output_dir = 'data/bdiv_summary/{metric_width}'
+    log:
+        'logs/betadiv/compare_beta_diversity-{width}-{metric}.log'
+    benchmark:
+        'benchmarks/betadiv/compare_beta_diversity-{width}-{metric}.json'
     run:
         shell("""
               set +u; {QIIME_ENV}; set -u
 
               tree_compare.py -m {input.host_tree} \
               -s {params.jack_dir} \
-              -o {params.output_dir}
+              -o {params.output_dir} 1> {log} 2>&1
               """)
 
 
@@ -144,6 +161,10 @@ rule annotate_bdiv_tree:
         input_dir = 'data/bdiv_summary',
         beta_metrics = ','.join(config['bdiv_params']['bdiv_metrics']),
         otu_widths = ','.join(str(x) for x in config['bdiv_params']['bdiv_OTU_widths'])
+    log:
+        'logs/betadiv/annotate_bdiv_tree.log'
+    benchmark:
+        'benchmarks/betadiv/annotate_bdiv_tree.json'
     run:
         shell("""
               set +u; {BDIV_ENV}; set -u
@@ -153,7 +174,7 @@ rule annotate_bdiv_tree:
               --otu_widths {params.beta_metrics} \
               --input_dir ${params.input_dir} \
               --output_fp {output} \
-              --tree_fp ${input[0]}
+              --tree_fp ${input[0]} 1> {log} 2>&1
               """)
 
 
@@ -170,6 +191,10 @@ rule collapse_pOTU_tables:
                 config['codiv_params']['collapse_field']
     params:
         collapse_field = config['codiv_params']['collapse_field']
+    log:
+        'logs/codiv/collapse_pOTU_tables-{width}.log'
+    benchmark:
+        'benchmarks/codiv/collapse_pOTU_tables-{width}.json'
     run:
         shell("""
               set +u; {QIIME_ENV}; set -u
@@ -178,7 +203,7 @@ rule collapse_pOTU_tables:
               -m {input.md_map} \
               --output_biom_fp {output.biom} \
               --output_mapping_fp {output.collapse_map} \
-              --collapse_fields {params.collapse_field}
+              --collapse_fields {params.collapse_field} 1> {log} 2>&1
               """)
 
 
@@ -192,6 +217,10 @@ rule rarify_pOTU_tables:
                  config['codiv_params']['pOTU_rarify'])
     params:
         pOTU_rarify = config['codiv_params']['pOTU_rarify']
+    log:
+        'logs/codiv/rarify_pOTU_tables-{width}.log'
+    benchmark:
+        'benchmarks/codiv/rarify_pOTU_tables-{width}.json'
     run:
         shell("""
               set +u; {QIIME_ENV}; set -u
@@ -199,7 +228,7 @@ rule rarify_pOTU_tables:
               # rarify for even sampling across species
               single_rarefaction.py -i {input.biom} \
               -o {output.biom} \
-              -d {params.pOTU_rarify}
+              -d {params.pOTU_rarify} 1> {log} 2>&1
               """)
 
 
@@ -215,6 +244,10 @@ rule subset_pOTU_tables:
                  config['codiv_params']['min_obvs'])
     params:
         min_obvs = config['codiv_params']['min_obvs']
+    log:
+        'logs/codiv/subset_pOTU_tables-{width}.log'
+    benchmark:
+        'benchmarks/codiv/subset_pOTU_tables-{width}.json'
     run:
         shell("""
               set +u; {QIIME_ENV}; set -u
@@ -223,7 +256,7 @@ rule subset_pOTU_tables:
               filter_otus_from_otu_table.py \
               -i {input.biom} \
               -s {params.min_obvs} \
-              -o {output.biom}
+              -o {output.biom} 1> {log} 2>&1
               """)
 
 
@@ -239,13 +272,17 @@ rule split_pOTU_tables:
                                       width=wildcards.width))
     params:
         chunks = config['codiv_params']['pOTU_chunks']
+    log:
+        'logs/codiv/split_pOTU_tables-{width}.log'
+    benchmark:
+        'benchmarks/codiv/split_pOTU_tables-{width}.json'
     run:
         shell("""
               set +u; {QIIME_ENV}; set -u
 
               split_biom.py -i {input.biom} \
               -o data/codiv/temp_biom \
-              -n {params.chunks}
+              -n {params.chunks} 1> {log} 2>&1
               """)
 
 
@@ -257,6 +294,10 @@ rule subcluster_pOTUs:
         params = config['input_files']['cOTU_params_fp']
     output:
         'data/codiv/{width}/subclustered_otus/chunk{chunk}.done'
+    log:
+        'logs/codiv/subcluster_pOTUs-{width}-{chunk}.log'
+    benchmark:
+        'benchmarks/codiv/subcluster_pOTUs-{width}-{chunk}.json'
     run:
         shell("""
               set +u; {QIIME_ENV}; set -u
@@ -269,7 +310,7 @@ rule subcluster_pOTUs:
               --force \
               -b {input.biom}
 
-              touch {output}
+              touch {output} 1> {log} 2>&1
               """)
 
 
@@ -296,6 +337,10 @@ rule test_cospeciation:
         codiv_test = config['codiv_params']['codiv_test'],
         collapse_field = config['codiv_params']['collapse_field'],
         perms = config['codiv_params']['permutations']
+    log:
+        'logs/codiv/test_cospeciation-{width}.log'
+    benchmark:
+        'benchmarks/codiv/test_cospeciation-{width}.json'
     run:
         shell("""
               set +u; {QIIME_ENV}; set -u
@@ -309,5 +354,5 @@ rule test_cospeciation:
               -m {input.md_map} \
               --collapse_fields {params.collapse_field} \
               --permutations {params.permutations}
-              --force
+              --force 1> {log} 2>&1
               """)
