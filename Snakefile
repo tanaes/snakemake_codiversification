@@ -4,7 +4,23 @@ codiv_scripts_dir = config['envs']['codiv_scripts_dir']
 
 rule all:
     input:
+        'data/bdiv_summary/master_tree_annotated.pdf',
+        expand('data/codiv/{width}/{test}_{field}/uncorrected_sig_nodes.txt' %
+                width=config['codiv_params']['pOTU_widths'],
+                test=config['codiv_params']['codiv_test'],
+                field=config['codiv_params']['collapse_field'])
+
+rule beta_div:
+    input:
         'data/bdiv_summary/master_tree_annotated.pdf'
+
+
+rule codiversification:
+    input:
+        expand('data/codiv/{width}/{test}_{field}/uncorrected_sig_nodes.txt' %
+                width=config['codiv_params']['pOTU_widths'],
+                test=config['codiv_params']['codiv_test'],
+                field=config['codiv_params']['collapse_field'])
 
 
 ### Rules for generating param files
