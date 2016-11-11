@@ -37,8 +37,8 @@ rule make_pOTU_picking_params:
         method = config['codiv_params']['otu_picking_method']
     run:
         with open(output[0], 'w') as out:
-            out.write('pick_otus:similarity {wildcards.width}\n'
-                      'pick_otus:method {params.method}')
+            out.write('pick_otus:similarity {:3.2f}'.format(float(wildcards.width)/100))
+            out.write('pick_otus:otu_picking_method {params.method}')
 
 
 rule make_bdiv_params:
