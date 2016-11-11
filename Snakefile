@@ -128,8 +128,8 @@ rule pOTU_clustering:
               -p {input.params} \
               -aO {threads} -f 1> {log} 2>&1
 
-              ln -s {params.output_dir}/rep_set/*.fna {params.output_dir}/rep_set.fna
-              ln -s {params.output_dir}/*picked_otus/*_otus.txt {params.output_dir}/otu_map.txt
+              ln -s `find $PWD/{params.output_dir}/rep_set -name *.fna` {params.output_dir}/rep_set.fna
+              ln -s `find $PWD/{params.output_dir}/*picked_otus -name *_otus.txt` {params.output_dir}/otu_map.txt
               """)
 
 
