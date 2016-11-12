@@ -395,6 +395,6 @@ rule test_cospeciation:
               -T {params.codiv_test} \
               -m {input.md_map} \
               --collapse_fields {params.collapse_field} \
-              --permutations {params.permutations}
+              --permutations {params.permutations} \
               --force 1> {log} 2>&1
               """)
