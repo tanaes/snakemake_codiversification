@@ -212,7 +212,7 @@ rule annotate_bdiv_tree:
 
               annotate_bdiv_tree.py \
               --beta_metrics {params.beta_metrics} \
-              --otu_widths {params.beta_metrics} \
+              --otu_widths {params.otu_widths} \
               --input_dir ${params.input_dir} \
               --output_fp {output} \
               --tree_fp ${input[0]} 1> {log} 2>&1
