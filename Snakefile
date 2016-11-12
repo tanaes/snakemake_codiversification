@@ -172,7 +172,7 @@ rule jk_beta_diversity:
 rule compare_beta_diversity:
     input:
         upgma = 'data/pOTUs/{width}/jk_beta_div/{metric}/rare_upgma_consensus.tre',
-        host_tree = config['input_files']['host_tree_fp']
+        host_tree = config['input_files']['bdiv_host_tree_fp']
     output:
         support = 'data/bdiv_summary/{metric}_{width}/jackknife_support.txt',
         tree = 'data/bdiv_summary/{metric}_{width}/master_tree.tre',
@@ -365,17 +365,17 @@ rule test_cospeciation:
                 (config['codiv_params']['collapse_field'],
                  config['codiv_params']['pOTU_rarify'],
                  config['codiv_params']['min_obvs']),
-        host_tree = config['input_files']['host_tree_fp'],
+        host_tree = config['input_files']['codiv_host_tree_fp'],
         md_map = config['input_files']['sample_map'],
     output:
         'data/codiv/{width}/%s_%s/uncorrected_sig_nodes.txt' %
-        (config['codiv_params']['codiv_test'],
-         config['codiv_params']['collapse_field'])
+                            (config['codiv_params']['codiv_test'],
+                             config['codiv_params']['collapse_field'])
     params:
         in_dir = 'data/codiv/{width}/subclustered_otus',
         out_dir = 'data/codiv/{width}/%s_%s' %
-                  (config['codiv_params']['codiv_test'],
-                   config['codiv_params']['collapse_field']),
+                              (config['codiv_params']['codiv_test'],
+                               config['codiv_params']['collapse_field']),
         codiv_test = config['codiv_params']['codiv_test'],
         collapse_field = config['codiv_params']['collapse_field'],
         perms = config['codiv_params']['permutations']
