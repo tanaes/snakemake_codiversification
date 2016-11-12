@@ -175,7 +175,7 @@ rule compare_beta_diversity:
         support = 'data/bdiv_summary/{metric}_{width}/jackknife_support.txt',
         tree = 'data/bdiv_summary/{metric}_{width}/master_tree.tre',
     params:
-        jack_dir = 'data/pOTUs/{width}/jk_beta_div_{metric}/rare_upgma',
+        jack_dir = 'data/pOTUs/{width}/jk_beta_div/{metric}/rare_upgma',
         output_dir = 'data/bdiv_summary/{metric}_{width}'
     log:
         'logs/betadiv/compare_beta_diversity-{width}-{metric}.log'
