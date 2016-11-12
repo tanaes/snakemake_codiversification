@@ -344,7 +344,7 @@ rule subcluster_pOTUs:
         shell("""
               set +u; {qiime_env}; set -u
 
-              python ${codiv_scripts_dir}/otu_subcluster.py \
+              python {codiv_scripts_dir}/otu_subcluster.py \
               -i {input.otu_map} \
               -o data/codiv/{wildcards.width}/subclustered_otus \
               -f {input.fasta} \
