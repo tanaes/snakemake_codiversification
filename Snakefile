@@ -387,7 +387,7 @@ rule test_cospeciation:
         shell("""
               set +u; {qiime_env}; set -u
 
-              python ${codiv_scripts_dir}/test_cospeciation.py \
+              python {codiv_scripts_dir}/test_cospeciation.py \
               -i {params.in_dir} \
               -p {input.biom} \
               --host_tree_fp {input.host_tree} \
