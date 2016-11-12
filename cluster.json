@@ -22,7 +22,7 @@
     "test_cospeciation": {
         "time": "12:00:00",
         "n": 2,
-        "mem": 32
+        "mem": 64
     }
 }
 
