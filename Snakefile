@@ -322,7 +322,7 @@ rule split_pOTU_tables:
 
               split_biom.py -i {input.biom} \
               -o data/codiv/temp_biom \
-              -n  1> {log} 2>&1
+              -n {pOTU_chunks} 1> {log} 2>&1
               """)
 
 
