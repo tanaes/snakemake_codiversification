@@ -378,7 +378,7 @@ rule test_cospeciation:
                                config['codiv_params']['collapse_field']),
         codiv_test = config['codiv_params']['codiv_test'],
         collapse_field = config['codiv_params']['collapse_field'],
-        perms = config['codiv_params']['permutations']
+        permutations = config['codiv_params']['permutations']
     log:
         'logs/codiv/test_cospeciation-{width}.log'
     benchmark:
