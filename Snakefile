@@ -312,6 +312,8 @@ rule split_pOTU_tables:
     output:
         ['data/codiv/{width}/temp_biom/chunk%s.biom' %
          x for x in list(range(1, pOTU_chunks + 1))]
+    params:
+        output_dir = 'data/codiv/{width}/temp_biom'
     log:
         'logs/codiv/split_pOTU_tables-{width}.log'
     benchmark:
@@ -321,7 +323,7 @@ rule split_pOTU_tables:
               set +u; {qiime_env}; set -u
 
               split_biom.py -i {input.biom} \
-              -o data/codiv/temp_biom \
+              -o {params.output_dir} \
               -n {pOTU_chunks} 1> {log} 2>&1
               """)
 
