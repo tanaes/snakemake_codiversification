@@ -50,7 +50,7 @@ codiv_params:
     10000
 input_files:
   codiv_host_tree_fp:
-    /home/ssong/sanders_anal/deblurred/primate_tree_376_taxa-chronogram_newick.tre
+    /home/ssong/sanders_anal/deblurred_redo/input_files/primate_tree_376_taxa-chronogram_newick.tre
   bdiv_host_tree_fp:
     /home/ssong/sanders_anal/deblurred_redo/input_files/furcated_host_tree.tre
   deblurred_biom:
