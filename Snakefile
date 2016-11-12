@@ -350,9 +350,9 @@ rule subcluster_pOTUs:
               -f {input.fasta} \
               -p {input.params} \
               --force \
-              -b {input.biom}
+              -b {input.biom} 1> {log} 2>&1
 
-              touch {output} 1> {log} 2>&1
+              touch {output}
               """)
 
 
