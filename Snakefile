@@ -12,6 +12,8 @@ pOTU_chunks = config['codiv_params']['pOTU_chunks']
 
 codiv_scripts_dir = config['envs']['codiv_scripts_dir']
 
+localrules: annotate_bdiv_tree
+
 rule all:
     input:
         'data/bdiv_summary/master_tree_annotated.pdf',
