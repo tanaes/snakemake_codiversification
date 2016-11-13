@@ -381,7 +381,7 @@ rule test_cospeciation:
         'data/codiv/{width}/%s_%s/uncorrected_sig_nodes.txt' %
                             (config['codiv_params']['codiv_test'],
                              config['codiv_params']['collapse_field']),
-        'data/codiv/{width}/%s_%s/bh_fdr_sig_nodes.txt' %
+        'data/codiv/{width}/%s_%s/bh_FDR_sig_nodes.txt' %
                             (config['codiv_params']['codiv_test'],
                              config['codiv_params']['collapse_field']),
         'data/codiv/{width}/%s_%s/bonferroni_sig_nodes.txt' %
