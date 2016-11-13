@@ -12,7 +12,7 @@ pOTU_chunks = config['codiv_params']['pOTU_chunks']
 
 codiv_scripts_dir = config['envs']['codiv_scripts_dir']
 
-localrules: annotate_bdiv_tree
+localrules: annotate_bdiv_tree, annotate_cotu_trees
 
 rule all:
     input:
