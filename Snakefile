@@ -20,7 +20,12 @@ rule all:
         expand('data/codiv/{width}/{test}_{field}/uncorrected_sig_nodes.txt',
                 width=config['codiv_params']['pOTU_widths'],
                 test=config['codiv_params']['codiv_test'],
-                field=config['codiv_params']['collapse_field'])
+                field=config['codiv_params']['collapse_field']),
+        expand('data/codiv/{width}/{test}_{field}/{correction}/annotate_cotu_trees.done',
+                width=config['codiv_params']['pOTU_widths'],
+                test=config['codiv_params']['codiv_test'],
+                field=config['codiv_params']['collapse_field'],
+                correction=config['codiv_params']['annotate_trees'])
 
 rule beta_div:
     input:
@@ -32,7 +37,12 @@ rule codiversification:
         expand('data/codiv/{width}/{test}_{field}/uncorrected_sig_nodes.txt',
                 width=config['codiv_params']['pOTU_widths'],
                 test=config['codiv_params']['codiv_test'],
-                field=config['codiv_params']['collapse_field'])
+                field=config['codiv_params']['collapse_field']),
+        expand('data/codiv/{width}/{test}_{field}/{correction}/annotate_cotu_trees.done',
+                width=config['codiv_params']['pOTU_widths'],
+                test=config['codiv_params']['codiv_test'],
+                field=config['codiv_params']['collapse_field'],
+                correction=config['codiv_params']['annotate_trees'])
 
 
 ### Rules for generating param files
@@ -370,6 +380,18 @@ rule test_cospeciation:
     output:
         'data/codiv/{width}/%s_%s/uncorrected_sig_nodes.txt' %
                             (config['codiv_params']['codiv_test'],
+                             config['codiv_params']['collapse_field']),
+        'data/codiv/{width}/%s_%s/bh_fdr_sig_nodes.txt' %
+                            (config['codiv_params']['codiv_test'],
+                             config['codiv_params']['collapse_field']),
+        'data/codiv/{width}/%s_%s/bonferroni_sig_nodes.txt' %
+                            (config['codiv_params']['codiv_test'],
+                             config['codiv_params']['collapse_field']),
+        'data/codiv/{width}/%s_%s/FDR_sig_nodes.txt' %
+                            (config['codiv_params']['codiv_test'],
+                             config['codiv_params']['collapse_field']),
+        'data/codiv/{width}/%s_%s/cospeciation_results_summary.txt' %
+                            (config['codiv_params']['codiv_test'],
                              config['codiv_params']['collapse_field'])
     params:
         in_dir = 'data/codiv/{width}/subclustered_otus',
@@ -397,4 +419,42 @@ rule test_cospeciation:
               --collapse_fields {params.collapse_field} \
               --permutations {params.permutations} \
               --force 1> {log} 2>&1
+              """)
+
+rule annotate_cotu_trees:
+    input:
+        table = 'data/codiv/{width}/%s_%s/{correction}.txt' %
+                            (config['codiv_params']['codiv_test'],
+                             config['codiv_params']['collapse_field']),
+        host_tree = config['input_files']['codiv_host_tree_fp']
+    output:
+        'data/codiv/{width}/%s_%s/{correction}/annotate_cotu_trees.done' %
+                            (config['codiv_params']['codiv_test'],
+                             config['codiv_params']['collapse_field'])
+    params:
+        collapse_field = config['codiv_params']['collapse_field'],
+        subcluster_dir = 'data/codiv/{width}/subclustered_otus',
+        output_dir = 'data/codiv/{width}/%s_%s/{correction}' %
+                            (config['codiv_params']['codiv_test'],
+                             config['codiv_params']['collapse_field'])
+    log:
+        'logs/codiv/annotate_cotu_trees-{width}-{correction}.log'
+    benchmark:
+        'benchmarks/codiv/annotate_cotu_trees-{width}-{correction}.json'
+    run:
+        shell("""
+              set +u; {bdiv_env}; set -u
+
+              annotate_cotu_trees.py
+              --pies \
+              --labels \
+              --collapse_field {params.collapse_field} \
+              --results_table_fp {input.table} \
+              --subcluster_dir {params.subcluster_dir} \
+              --host_tree_fp {input.host_tree} \
+              --taxonomy \
+              --output_dir {params.output_dir}
+              --force 
+
+              touch {output}
               """)
