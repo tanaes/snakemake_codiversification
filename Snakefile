@@ -453,7 +453,7 @@ rule annotate_cotu_trees:
               --subcluster_dir {params.subcluster_dir} \
               --host_tree_fp {input.host_tree} \
               --taxonomy \
-              --output_dir {params.output_dir}
+              --output_dir {params.output_dir} \
               --force 1> {log} 2>&1
 
               touch {output}
