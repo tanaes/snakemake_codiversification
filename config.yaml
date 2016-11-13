@@ -30,7 +30,7 @@ bdiv_params:
     7200
 codiv_params:
   annotate_trees:
-    - bh_fdr_sig_nodes
+    - bh_FDR_sig_nodes
     - bonferroni_sig_nodes
   otu_picking_method:
     usearch61
