@@ -445,7 +445,7 @@ rule annotate_cotu_trees:
         shell("""
               set +u; {bdiv_env}; set -u
 
-              annotate_cotu_trees.py
+              annotate_cotu_trees.py \
               --pies \
               --labels \
               --collapse_field {params.collapse_field} \
@@ -454,7 +454,7 @@ rule annotate_cotu_trees:
               --host_tree_fp {input.host_tree} \
               --taxonomy \
               --output_dir {params.output_dir}
-              --force 
+              --force 1> {log} 2>&1
 
               touch {output}
               """)
