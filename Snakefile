@@ -426,7 +426,7 @@ rule annotate_cotu_trees:
         table = 'data/codiv/{width}/%s_%s/{correction}.txt' %
                             (config['codiv_params']['codiv_test'],
                              config['codiv_params']['collapse_field']),
-        host_tree = config['input_files']['codiv_host_tree_fp']
+        host_tree = config['input_files']['annotate_host_tree_fp']
     output:
         'data/codiv/{width}/%s_%s/{correction}/annotate_cotu_trees.done' %
                             (config['codiv_params']['codiv_test'],

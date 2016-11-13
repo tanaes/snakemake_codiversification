@@ -52,6 +52,8 @@ codiv_params:
   permutations:
     10000
 input_files:
+  annotate_host_tree_fp:
+    /home/ssong/sanders_anal/deblurred_redo/input_files/monkey_subtree.tre
   codiv_host_tree_fp:
     /home/ssong/sanders_anal/deblurred_redo/input_files/primate_tree_376_taxa-chronogram_newick.tre
   bdiv_host_tree_fp:
